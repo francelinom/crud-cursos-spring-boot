@@ -25,4 +25,10 @@ public class CursosController {
     public ResponseEntity<Curso> create(@RequestBody Curso curso) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoRepository.save(curso));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Curso> findById(@PathVariable Long id) {
+        return cursoRepository.findById(id).map(record -> ResponseEntity.ok().body(record))
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
