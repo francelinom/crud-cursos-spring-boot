@@ -2,6 +2,9 @@ package br.com.francelinodev.crudcursosspringboot.controller;
 
 import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import br.com.francelinodev.crudcursosspringboot.repository.CursoRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+@Valid
 @RestController
 @RequestMapping("/api/cursos")
 @AllArgsConstructor
@@ -22,18 +27,18 @@ public class CursosController {
     }
 
     @PostMapping
-    public ResponseEntity<Curso> create(@RequestBody Curso curso) {
+    public ResponseEntity<Curso> create(@RequestBody @Valid Curso curso) {
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoRepository.save(curso));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Curso> findById(@PathVariable Long id) {
+    public ResponseEntity<Curso> findById(@PathVariable @NotNull @Positive Long id) {
         return cursoRepository.findById(id).map(recordFound -> ResponseEntity.ok().body(recordFound))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Curso> update(@PathVariable Long id, @RequestBody Curso curso) {
+    public ResponseEntity<Curso> update(@PathVariable @Valid @NotNull @Positive Long id, @RequestBody Curso curso) {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
                     recordFound.setName(curso.getName());
@@ -45,7 +50,7 @@ public class CursosController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
                     cursoRepository.deleteById(id);
