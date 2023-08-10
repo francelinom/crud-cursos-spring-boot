@@ -8,6 +8,6 @@ import org.hibernate.validator.constraints.Length;
 
 public record CursoDTO(
         @JsonProperty("_id") Long id,
-        @NotBlank @NotNull @Length(min = 5, max = 100) String nome,
-        @NotNull @Length(max = 10) @Pattern(regexp = "Back-end|Front-end") String categoria) {
+        @NotBlank @NotNull @Length(min = 5, max = 100) String name,
+        @NotNull @Length(max = 10) @Pattern(regexp = "Back-end|Front-end") String category) {
 }

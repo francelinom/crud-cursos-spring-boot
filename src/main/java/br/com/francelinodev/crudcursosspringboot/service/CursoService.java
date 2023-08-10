@@ -1,5 +1,7 @@
 package br.com.francelinodev.crudcursosspringboot.service;
 
+import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.dto.mapper.CursoMapper;
 import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import br.com.francelinodev.crudcursosspringboot.repository.CursoRepository;
 import jakarta.validation.Valid;
@@ -14,36 +16,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
 public class CursoService {
 
     private final CursoRepository cursoRepository;
+    private final CursoMapper cursoMapper;
 
-    public CursoService(CursoRepository cursoRepository) {
+    public CursoService(CursoRepository cursoRepository, CursoMapper cursoMapper) {
         this.cursoRepository = cursoRepository;
+        this.cursoMapper = cursoMapper;
     }
 
-    public List<Curso> list() {
-        return cursoRepository.findAll();
+    public List<CursoDTO> list() {
+        return cursoRepository.findAll()
+                .stream()
+                .map(cursoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Curso> findById(@PathVariable @NotNull @Positive Long id) {
-        return cursoRepository.findById(id);
+    public CursoDTO findById(@PathVariable @NotNull @Positive Long id) {
+        return cursoRepository.findById(id).map(cursoMapper::toDTO)
+                .orElse(null);
     }
 
-    public Curso create(@Valid Curso curso) {
-        return cursoRepository.save(curso);
+    public CursoDTO create(@Valid @NotNull CursoDTO curso) {
+        return cursoMapper.toDTO(cursoRepository.save(cursoMapper.toEntity(curso)));
     }
 
-    public Optional<Curso> update(@Valid @NotNull @Positive Long id, Curso curso) {
+    public CursoDTO update(@Valid @NotNull @Positive Long id, CursoDTO curso) {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
-                    recordFound.setName(curso.getName());
-                    recordFound.setCategory(curso.getCategory());
-                    return cursoRepository.save(recordFound);
-                });
+                    recordFound.setName(curso.name());
+                    recordFound.setCategory(curso.category());
+                    return cursoMapper.toDTO(cursoRepository.save(recordFound));
+                }).orElseThrow(() -> new RuntimeException("Curso não encontrado" + id));
     }
 
     public boolean delete(@PathVariable @NotNull @Positive Long id) {
