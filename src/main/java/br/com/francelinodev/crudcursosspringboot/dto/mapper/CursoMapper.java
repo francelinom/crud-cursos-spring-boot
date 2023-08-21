@@ -1,6 +1,7 @@
 package br.com.francelinodev.crudcursosspringboot.dto.mapper;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.enums.Category;
 import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +12,7 @@ public class CursoMapper {
         if (curso == null) {
             return null;
         }
-        return new CursoDTO(curso.getId(), curso.getName(), curso.getCategory());
+        return new CursoDTO(curso.getId(), curso.getName(), "Front-end");
     }
 
     public Curso toEntity(CursoDTO cursoDTO) {
@@ -26,7 +27,7 @@ public class CursoMapper {
         }
 
         curso.setName(cursoDTO.name());
-        curso.setCategory(cursoDTO.category());
+        curso.setCategory(Category.FRONTEND);
         curso.setStatus("Ativo");
 
         return curso;

@@ -1,5 +1,7 @@
 package br.com.francelinodev.crudcursosspringboot.model;
 
+import br.com.francelinodev.crudcursosspringboot.enums.Category;
+import br.com.francelinodev.crudcursosspringboot.enums.converters.CategoryConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,10 +30,9 @@ public class Curso {
     private String name;
 
     @NotNull
-    @Length(max = 10)
-    @Pattern(regexp = "Back-end|Front-end")
     @Column(length = 10, nullable = false)
-    private String category;
+    @Convert(converter = CategoryConverter.class)
+    private Category category;
 
     @NotNull
     @Length(max = 10)
