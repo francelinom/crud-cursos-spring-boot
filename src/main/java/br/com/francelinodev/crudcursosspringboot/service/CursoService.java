@@ -2,21 +2,15 @@ package br.com.francelinodev.crudcursosspringboot.service;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
 import br.com.francelinodev.crudcursosspringboot.dto.mapper.CursoMapper;
-import br.com.francelinodev.crudcursosspringboot.enums.Category;
-import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import br.com.francelinodev.crudcursosspringboot.repository.CursoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Validated
@@ -38,7 +32,7 @@ public class CursoService {
                 .collect(Collectors.toList());
     }
 
-    public CursoDTO findById(@PathVariable @NotNull @Positive Long id) {
+    public CursoDTO findById(@NotNull @Positive Long id) {
         return cursoRepository.findById(id).map(cursoMapper::toDTO)
                 .orElse(null);
     }
@@ -51,12 +45,12 @@ public class CursoService {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
                     recordFound.setName(curso.name());
-                    recordFound.setCategory(Category.FRONTEND);
+                    recordFound.setCategory(cursoMapper.converterCategoryValue(curso.category()));
                     return cursoMapper.toDTO(cursoRepository.save(recordFound));
                 }).orElseThrow(() -> new RuntimeException("Curso não encontrado" + id));
     }
 
-    public boolean delete(@PathVariable @NotNull @Positive Long id) {
+    public boolean delete(@NotNull @Positive Long id) {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
                     cursoRepository.deleteById(id);
