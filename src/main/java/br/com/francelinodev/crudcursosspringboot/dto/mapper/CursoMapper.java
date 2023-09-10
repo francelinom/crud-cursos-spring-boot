@@ -12,7 +12,7 @@ public class CursoMapper {
         if (curso == null) {
             return null;
         }
-        return new CursoDTO(curso.getId(), curso.getName(), curso.getCategory().getValue());
+        return new CursoDTO(curso.getId(), curso.getName(), curso.getCategory().getValue(), curso.getLessons());
     }
 
     public Curso toEntity(CursoDTO cursoDTO) {
