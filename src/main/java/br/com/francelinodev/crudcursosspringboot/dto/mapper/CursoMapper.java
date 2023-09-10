@@ -1,9 +1,13 @@
 package br.com.francelinodev.crudcursosspringboot.dto.mapper;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.dto.LessonDTO;
 import br.com.francelinodev.crudcursosspringboot.enums.Category;
 import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CursoMapper {
@@ -12,7 +16,12 @@ public class CursoMapper {
         if (curso == null) {
             return null;
         }
-        return new CursoDTO(curso.getId(), curso.getName(), curso.getCategory().getValue(), curso.getLessons());
+        List<LessonDTO> lessons = curso.getLessons()
+                .stream()
+                .map(lesson -> new LessonDTO(lesson.getId(), lesson.getName(), lesson.getYoutubeUrl()))
+                .collect(Collectors.toList());
+
+        return new CursoDTO(curso.getId(), curso.getName(), curso.getCategory().getValue(), lessons);
     }
 
     public Curso toEntity(CursoDTO cursoDTO) {
