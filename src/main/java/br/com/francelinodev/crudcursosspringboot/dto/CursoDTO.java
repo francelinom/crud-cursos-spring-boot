@@ -1,6 +1,5 @@
 package br.com.francelinodev.crudcursosspringboot.dto;
 
-import br.com.francelinodev.crudcursosspringboot.model.Lesson;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,5 +12,5 @@ public record CursoDTO(
         @JsonProperty("_id") Long id,
         @NotBlank @NotNull @Length(min = 5, max = 100) String name,
         @NotNull @Length(max = 10) @Pattern(regexp = "Back-end|Front-end") String category,
-        List<Lesson> lessons) {
+        List<LessonDTO> lessons) {
 }
