@@ -13,6 +13,9 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @SQLDelete(sql = "UPDATE Curso SET status = 'Inativo' WHERE id = ?")
@@ -39,4 +42,7 @@ public class Curso {
     @Column(length = 10, nullable = false)
     @Convert(converter = StatusConverter.class)
     private Status status = Status.ATIVO;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Lesson> lessons = new ArrayList<>();
 }
