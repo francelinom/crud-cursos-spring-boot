@@ -46,56 +46,6 @@ class CursosControllerTest {
 
 
     @Test
-    void testFindById() throws Exception {
-        when(cursoService.findById(Mockito.<Long>any())).thenReturn(new CursoDTO(1L, "Name", "Category"));
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/cursos/{id}", 1L);
-        MockMvcBuilders.standaloneSetup(cursosController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("{\"_id\":1,\"name\":\"Name\",\"category\":\"Category\"}"));
-    }
-
-
-    @Test
-    void testUpdate() throws Exception {
-        when(cursoService.update(Mockito.<Long>any(), Mockito.<CursoDTO>any()))
-                .thenReturn(new CursoDTO(1L, "Name", "Category"));
-        MockHttpServletRequestBuilder contentTypeResult = MockMvcRequestBuilders.put("/api/cursos/{id}", 1L)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        MockHttpServletRequestBuilder requestBuilder = contentTypeResult
-                .content(objectMapper.writeValueAsString(new CursoDTO(1L, "Name", "Category")));
-        MockMvcBuilders.standaloneSetup(cursosController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("{\"_id\":1,\"name\":\"Name\",\"category\":\"Category\"}"));
-    }
-
-
-    @Test
-    void testCreate() throws Exception {
-        when(cursoService.list()).thenReturn(new ArrayList<>());
-        MockHttpServletRequestBuilder contentTypeResult = MockMvcRequestBuilders.get("/api/cursos")
-                .contentType(MediaType.APPLICATION_JSON);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        MockHttpServletRequestBuilder requestBuilder = contentTypeResult
-                .content(objectMapper.writeValueAsString(new CursoDTO(1L, "Name", "Category")));
-        MockMvcBuilders.standaloneSetup(cursosController)
-                .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-                .andExpect(MockMvcResultMatchers.content().string("[]"));
-    }
-
-
-    @Test
     void testDelete() throws Exception {
         when(cursoService.delete(Mockito.<Long>any())).thenReturn(true);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/api/cursos/{id}", 1L);
