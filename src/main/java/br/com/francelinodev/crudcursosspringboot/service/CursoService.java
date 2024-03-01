@@ -2,6 +2,7 @@ package br.com.francelinodev.crudcursosspringboot.service;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
 import br.com.francelinodev.crudcursosspringboot.dto.mapper.CursoMapper;
+import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import br.com.francelinodev.crudcursosspringboot.repository.CursoRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -41,11 +42,14 @@ public class CursoService {
         return cursoMapper.toDTO(cursoRepository.save(cursoMapper.toEntity(curso)));
     }
 
-    public CursoDTO update(@Valid @NotNull @Positive Long id, CursoDTO curso) {
+    public CursoDTO update(@Valid @NotNull @Positive Long id, CursoDTO cursoDTO) {
         return cursoRepository.findById(id)
                 .map(recordFound -> {
-                    recordFound.setName(curso.name());
-                    recordFound.setCategory(cursoMapper.converterCategoryValue(curso.category()));
+                    Curso curso = cursoMapper.toEntity(cursoDTO);
+                    recordFound.setName(cursoDTO.name());
+                    recordFound.setCategory(cursoMapper.converterCategoryValue(cursoDTO.category()));
+                    recordFound.getLessons().clear();
+                    curso.getLessons().forEach(recordFound.getLessons()::add);
                     return cursoMapper.toDTO(cursoRepository.save(recordFound));
                 }).orElseThrow(() -> new RuntimeException("Curso não encontrado" + id));
     }

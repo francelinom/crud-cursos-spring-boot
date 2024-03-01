@@ -13,6 +13,7 @@ import java.util.List;
 
 @Valid
 @RestController
+@CrossOrigin(origins = "4200")
 @RequestMapping("/api/cursos")
 public class CursosController {
 
