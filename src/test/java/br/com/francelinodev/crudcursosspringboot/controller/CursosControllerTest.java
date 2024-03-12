@@ -3,6 +3,7 @@ package br.com.francelinodev.crudcursosspringboot.controller;
 import static org.mockito.Mockito.when;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.dto.CursoPageDTO;
 import br.com.francelinodev.crudcursosspringboot.service.CursoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,7 +35,9 @@ class CursosControllerTest {
 
     @Test
     void testList() throws Exception {
-        when(cursoService.list()).thenReturn(new ArrayList<>());
+        int page = 0;
+        int size = 10;
+        when(cursoService.list(page, size)).thenReturn(new CursoPageDTO(new ArrayList<>(), 0L, 0L));
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/api/cursos");
         MockMvcBuilders.standaloneSetup(cursosController)
                 .build()

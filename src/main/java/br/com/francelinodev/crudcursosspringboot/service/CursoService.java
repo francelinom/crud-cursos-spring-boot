@@ -1,13 +1,18 @@
 package br.com.francelinodev.crudcursosspringboot.service;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.dto.CursoPageDTO;
 import br.com.francelinodev.crudcursosspringboot.dto.mapper.CursoMapper;
 import br.com.francelinodev.crudcursosspringboot.model.Curso;
 import br.com.francelinodev.crudcursosspringboot.repository.CursoRepository;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import jakarta.validation.constraints.PositiveOrZero;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -26,12 +31,18 @@ public class CursoService {
         this.cursoMapper = cursoMapper;
     }
 
-    public List<CursoDTO> list() {
-        return cursoRepository.findAll()
-                .stream()
-                .map(cursoMapper::toDTO)
-                .collect(Collectors.toList());
+    public CursoPageDTO list(@PositiveOrZero int page, @Positive @Max(100) int size) {
+        Page<Curso> pageCurso = cursoRepository.findAll(PageRequest.of(page, size));
+        List<CursoDTO> cursos = pageCurso.get().map(cursoMapper::toDTO).collect(Collectors.toList());
+        return new CursoPageDTO(cursos, pageCurso.getTotalElements(), pageCurso.getTotalPages());
     }
+
+//    public List<CursoDTO> list() {
+//        return cursoRepository.findAll()
+//                .stream()
+//                .map(cursoMapper::toDTO)
+//                .collect(Collectors.toList());
+//    }
 
     public CursoDTO findById(@NotNull @Positive Long id) {
         return cursoRepository.findById(id).map(cursoMapper::toDTO)

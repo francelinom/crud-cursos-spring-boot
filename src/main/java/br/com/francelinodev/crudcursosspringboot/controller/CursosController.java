@@ -1,10 +1,13 @@
 package br.com.francelinodev.crudcursosspringboot.controller;
 
 import br.com.francelinodev.crudcursosspringboot.dto.CursoDTO;
+import br.com.francelinodev.crudcursosspringboot.dto.CursoPageDTO;
 import br.com.francelinodev.crudcursosspringboot.service.CursoService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +27,14 @@ public class CursosController {
     }
 
     @GetMapping
-    public List<CursoDTO> list() {
-        return cursoService.list();
+    public CursoPageDTO list(@RequestParam(defaultValue = "0") @PositiveOrZero int page, @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
+        return cursoService.list(page, size);
     }
+
+//    @GetMapping
+//    public List<CursoDTO> list() {
+//        return cursoService.list();
+//    }
 
     @PostMapping
     public CursoDTO create(@RequestBody @Valid @NotNull CursoDTO curso) {
